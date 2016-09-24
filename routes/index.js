@@ -13,56 +13,32 @@ var request = require('request');
 var cheerio = require('cheerio');
 var app = express();
 
+var getX11Prop = function($el, prop){
+    return $el.find("." + prop).contents().first().text();
+};
+
 router.get('/scrape', function(req, res) {
 
-    console.log('Magic happens on port 22');
-    // The URL we will scrape from - in our example Anchorman 2.
-
-    url = 'http://www.milanuncios.com/anuncios-en-cantabria/t5-multivan.htm';
-
-    // The structure of our request call
-    // The first parameter is our URL
-    // The callback function takes 3 parameters, an error, response status code and the html
+    url = 'http://www.milanuncios.com/anuncios-en-cantabria/t5-multivan.htm?desde=3000';
 
     request(url, function(error, response, html) {
-
-        // First we'll check to make sure no errors occurred when making the request
-
         if (!error) {
-            // Next, we'll utilize the cheerio library on the returned html which will essentially give us jQuery functionality
-
             var $ = cheerio.load(html);
-
-            // Finally, we'll define the variables we're going to capture
-
-            var title, release, rating;
             var json = {
                 anuncios: []
             };
-
-            // We'll use the unique header class as a starting point.
-
             $("div.x1").each(function(i, elem) {
                 var data = $(this);
-                json.anuncios.push(data.find(".cti").text());
+                var props = data.find(".x11");
+                json.anuncios.push({
+                    title: data.find(".cti").text(),
+                    ano: getX11Prop(props, "ano"),
+                    kms: getX11Prop(props, "kms"),
+                    cv: getX11Prop(props, "cv"),
+                    profesional: data.find(".vem.pro").length > 0,
+                    automatico: data.find(".cauto").length > 0
+                });
             });
-            /*
-            $('.header').filter(function() {
-
-                // Let's store the data we filter into a variable so we can easily see what's going on.
-
-                var data = $(this);
-
-                // In examining the DOM we notice that the title rests within the first child element of the header tag.
-                // Utilizing jQuery we can easily navigate and get the text by writing the following code:
-
-                title = data.children().first().text();
-
-                // Once we have our title, we'll store it to the our json object.
-
-                json.title = title;
-            })
-            */
         }
 
         // To write to the system we will use the built in 'fs' library.
@@ -78,7 +54,7 @@ router.get('/scrape', function(req, res) {
 
         })
         */
-        console.log(JSON.stringify(json, null, 4));
+        //console.log(JSON.stringify(json, null, 4));
 
         //res.send('Check your console! <br/>' + JSON.stringify(json, null, 4));
         res.json(json);
