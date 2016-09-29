@@ -10,7 +10,7 @@ html(lang='en')
     // Bootstrap Core CSS
     link(href='stylesheets/bootstrap.min.css', rel='stylesheet')
     // Custom CSS
-    link(href='stylesheets/modern-business.css', rel='stylesheet')
+    link(href='stylesheets/buscofurgo.css', rel='stylesheet')
     // Custom Fonts
     link(href='font-awesome/css/font-awesome.min.css', rel='stylesheet', type='text/css')
     // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
@@ -29,7 +29,7 @@ html(lang='en')
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.navbar-brand(href='index.html') Busco Furgo
+          a.navbar-brand(href='index.html') #{title}
         // Collect the nav links, forms, and other content for toggling
         //-
         #bs-example-navbar-collapse-1.collapse.navbar-collapse
@@ -85,7 +85,18 @@ html(lang='en')
       // /.container
     // Header Carousel
     header.portada
-      
+      .row
+          .col-md-offset-8.col-md-3
+              form.search-box.clearfix
+                  .form-group
+                    label(for='exampleInputEmail1') Búsqueda
+                    input#exampleInputEmail1.form-control(type='email', placeholder='Ej. Volkswagen T5 multivan')
+                  .checkbox
+                    label
+                      input(type='checkbox')
+                      |  Multipágina
+                  button.btn.btn-primary.pull-right(type='submit') Submit
+
     // Page Content
     .container
       // Marketing Icons Section
