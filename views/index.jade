@@ -87,18 +87,19 @@ html(lang='en')
     header.portada
       .row
           .col-md-offset-8.col-md-3
-              form.search-box.clearfix
+              form.search-box.clearfix(action='')
                   .form-group
-                    label(for='exampleInputEmail1') Búsqueda
-                    input#exampleInputEmail1.form-control(type='email', placeholder='Ej. Volkswagen T5 multivan')
+                    label(for='search-text') Búsqueda
+                    input#search-text.form-control(type='search', placeholder='Ej. Volkswagen T5 multivan')
                   .checkbox
                     label
                       input(type='checkbox')
                       |  Multipágina
-                  button.btn.btn-primary.pull-right(type='submit') Submit
+                  button.btn.btn-primary.pull-right(type='submit') Buscar
 
     // Page Content
-    .container
+    .container#main-content
+      .row#search-results
       // Marketing Icons Section
       .row
         .col-lg-12
@@ -193,10 +194,11 @@ html(lang='en')
           .col-lg-12
             p Copyright © Your Website 2014
     // /.container
-    script(src='javascripts/jquery.js')
-    script(src='javascripts/bootstrap.min.js')
-    script(src='javascripts/underscore.js')
-    script(src='javascripts/backbone.js')
-    script(src='javascripts/backbone.radio.js')
-    script(src='javascripts/backbone.marionette.min.js')
+    script(src='javascripts/ext/jquery.js')
+    script(src='javascripts/ext/bootstrap.min.js')
+    script(src='javascripts/ext/underscore.js')
+    script(src='javascripts/ext/backbone.js')
+    script(src='javascripts/ext/backbone.radio.js')
+    script(src='javascripts/ext/backbone.marionette.min.js')
+    script(src='javascripts/app.js')
         
