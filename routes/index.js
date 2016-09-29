@@ -33,6 +33,9 @@ router.get('/scrape', function(req, res) {
                 var props = data.find(".x11");
                 var header = data.find(".x4").text();
                 var $title = data.find(".x7 a.cti");
+                if (!$title.length){
+                    $title = data.find(".x9 a.cti");
+                }
                 json.anuncios.push({
                     title: $title.text(),
                     link: "http://www.milanuncios.com" + $title.attr('href'),
