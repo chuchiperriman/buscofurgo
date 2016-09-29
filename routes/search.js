@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var fs = require('fs');
+var iconv = require('iconv-lite');
 var request = require('request');
 var cheerio = require('cheerio');
 var S = require('string');
@@ -15,30 +16,39 @@ router.get('/', function(req, res) {
 
     url = 'http://www.milanuncios.com/anuncios-en-cantabria/t5-multivan.htm?desde=3000';
 
-    request(url, function(error, response, html) {
+    request({
+        uri: url,
+        encoding: null
+    }, function(error, response, html) {
         if (!error) {
-            var $ = cheerio.load(html);
+            var $ = cheerio.load(iconv.decode(html, 'iso-8859-15').toString('utf-8'));
             var json = {
-                anuncios: []
+                results: []
             };
             $("div.x1").each(function(i, elem) {
                 var data = $(this);
                 var props = data.find(".x11");
                 var header = data.find(".x4").text();
-                var $title = data.find(".x7 a.cti");
-                if (!$title.length){
-                    $title = data.find(".x9 a.cti");
+                var $body = data.find(".x7");
+                if (!$body.length){
+                    $body = data.find(".x9");
                 }
-                json.anuncios.push({
+                var $title = $body.find("a.cti");
+                var text = $body.find(".tx").text();
+                //console.log(text);
+                json.results.push({
                     title: $title.text(),
                     link: "http://www.milanuncios.com" + $title.attr('href'),
-                    ano: getX11Prop(props, "ano"),
-                    kms: getX11Prop(props, "kms"),
+                    description: text,
+                    // TODO Quitamos el símbolo del Euro de momento, sale mal
+                    price: getX11Prop(props, 'pr').slice(0, -1),
+                    year: getX11Prop(props, "ano"),
+                    mileage: getX11Prop(props, "kms"),
                     cv: getX11Prop(props, "cv"),
-                    profesional: data.find(".vem.pro").length > 0,
-                    automatico: data.find(".cauto").length > 0,
-                    comunidad: S(header).between('(', ')').s.trim() ,
-                    localidad: S(header).contains(' en ') ? S(header).between(' en ', '(').s : ''
+                    professional: data.find(".vem.pro").length > 0,
+                    automatic: data.find(".cauto").length > 0,
+                    province: S(header).between('(', ')').s.trim() ,
+                    location: S(header).contains(' en ') ? S(header).between(' en ', '(').s : ''
                 });
             });
         }
