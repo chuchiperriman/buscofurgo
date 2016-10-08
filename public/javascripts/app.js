@@ -34,7 +34,8 @@ var SearchBoxView = Mn.View.extend({
     events: {
         'submit': 'search'
     },
-    search: function(){
+    search: function(e){
+        e.preventDefault();
         console.log("searching");
         var results = new SearchResults();
         var self = this;

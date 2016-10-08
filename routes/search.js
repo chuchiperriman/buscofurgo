@@ -25,26 +25,25 @@ router.get('/', function(req, res) {
             var json = {
                 results: []
             };
-            $("div.x1").each(function(i, elem) {
+            $("div.aditem").each(function(i, elem) {
                 var data = $(this);
-                var props = data.find(".x11");
-                var header = data.find(".x4").text();
-                var $body = data.find(".x7");
+                var props = data.find(".x11 .inmo-attributes");
+                var header = data.find(".aditem-header").text();
+                var $body = data.find(".aditem-detail-image-container, .aditem-detail");
                 if (!$body.length){
                     $body = data.find(".x9");
                 }
-                var $title = $body.find("a.cti");
+                var $title = $body.find("a.aditem-detail-title");
                 var text = $body.find(".tx").text();
                 //console.log(text);
                 json.results.push({
                     title: $title.text(),
                     link: "http://www.milanuncios.com" + $title.attr('href'),
                     description: text,
-                    // TODO Quitamos el símbolo del Euro de momento, sale mal
-                    price: getX11Prop(props, 'pr').slice(0, -1),
+                    price: $body.find('.aditem-price').text(),
                     year: getX11Prop(props, "ano"),
                     mileage: getX11Prop(props, "kms"),
-                    cv: getX11Prop(props, "cv"),
+                    cv: getX11Prop(props, "cc"),
                     professional: data.find(".vem.pro").length > 0,
                     automatic: data.find(".cauto").length > 0,
                     province: S(header).between('(', ')').s.trim() ,
