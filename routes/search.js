@@ -61,9 +61,9 @@ var getMaData = function(html){
     return json;
 };
 
-var requestMaData = function(url, queryString, json, rescallback){
+var startRequestMaData = function(url, queryString, json, rescallback){
 
-    console.log("Entramos");
+    console.log("Entramos 1");
 
     request({
         uri: url + queryString,
@@ -75,19 +75,45 @@ var requestMaData = function(url, queryString, json, rescallback){
                 json.results = json.results.concat(madata.adds);
                 console.log("Concat");
             }
-            madata.pages.forEach(function(page){
-                console.log('Procesando ' + page.number);
-                if (json.pages.indexOf(page.number) > -1){
-                    json.pages.push(page.number);
-                    requestMaData(url, page.queryString, json, undefined);
-                    console.log("Procesada " + page.number);
-                }
-            });
+
+            var totalPages = madata.pages.length;
+            var currentPages = 0;
+            if (totalPages > 0){
+                console.log('Procesando ' + currentPages + 2);
+                var nextPageRequest = function(){
+                    console.log(currentPages + ' de ' + totalPages);
+                    if (++currentPages == totalPages){
+                        rescallback(json);
+                    }else{
+                        requestMaData(url, queryString + '&pagina=' + (currentPages + 2), json, nextPageRequest);
+                    }
+                };
+                requestMaData(url, queryString + '&pagina=2', json, nextPageRequest);
+            }else{
+                rescallback(json);
+            }
         }
-        if (rescallback){
-            console.log("callback");
-            rescallback(json);
+        console.log("Terminamos1");
+    });
+    console.log("Salimos1");
+};
+
+var requestMaData = function(url, queryString, json, callback){
+
+    console.log("Entramos: " + queryString);
+
+    request({
+        uri: url + queryString,
+        encoding: null
+    }, function(error, response, html) {
+        if (!error) {
+            var madata = getMaData(html);
+            if (madata.adds){
+                json.results = json.results.concat(madata.adds);
+                console.log("Concat");
+            }
         }
+        callback(json);
         console.log("Terminamos");
     });
     console.log("Salimos");
@@ -101,8 +127,9 @@ router.get('/', function(req, res) {
         pages: [1]
     };
 
-    requestMaData('http://www.milanuncios.com/anuncios-en-cantabria/t5-multivan.htm',
+    startRequestMaData('http://www.milanuncios.com/anuncios-en-cantabria/t5-multivan.htm',
         '?desde=3000&demanda=n&orden=baratos&cerca=s', json, function(){
+            console.log('Respondemos');
             res.json(json);
         });
 });
