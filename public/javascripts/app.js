@@ -1,9 +1,11 @@
 var SearchResultView = Mn.View.extend({
     template: '#search-result-tmpl',
+    tagName: 'tr',
     className: 'search-result'
 });
 
 var SearchResultsView = Mn.CollectionView.extend({
+    tagName: 'tbody',
     childView: SearchResultView
 });
 

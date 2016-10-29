@@ -21,7 +21,7 @@ nav.navbar-static-top{
 }
 
 header.portada {
-    height: 50%;
+    height: 35%;
     background-image: url(/images/fondo-min.jpeg);
     background-size:cover;
     background-color: #AAA;
