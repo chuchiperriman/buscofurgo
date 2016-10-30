@@ -8,6 +8,11 @@ var cheerio = require('cheerio');
 var S = require('string');
 var app = express();
 
+var config = {
+    online: false,
+    data_path: '/home/perriman/temp'
+};
+
 var getX11Prop = function($el, prop){
     return $el.find("." + prop).contents().first().text();
 };
@@ -127,11 +132,22 @@ router.get('/', function(req, res) {
         pages: [1]
     };
 
-    startRequestMaData('http://www.milanuncios.com/anuncios-en-cantabria/t5-multivan.htm',
-        '?desde=3000&demanda=n&orden=baratos&cerca=s', json, function(){
-            console.log('Respondemos');
-            res.json(json);
-        });
+    var jsonFile = config.data_path + '/ma_data.json';
+
+    if (config.online){
+        startRequestMaData('http://www.milanuncios.com/anuncios-en-cantabria/t5-multivan.htm',
+            '?desde=3000&demanda=n&orden=baratos&cerca=s', json, function(){
+                console.log('Respondemos');
+                fs.writeFile(jsonFile, JSON.stringify(json), function (err) {
+                    if (err) return console.log(err);
+                    console.log('Hello World > helloworld.txt');
+                });
+                res.json(json);
+            });
+    }else{
+        res.set('Content-Type', 'application/json');
+        res.send(fs.readFileSync(jsonFile, 'UTF-8'));
+    }
 });
 
 module.exports = router;
