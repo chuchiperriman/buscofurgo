@@ -5,7 +5,7 @@ var app = express();
 var ma = require('./webs/ma');
 
 var config = {
-    online: true,
+    online: false,
     data_path: '/home/perriman/temp'
 };
 

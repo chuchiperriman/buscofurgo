@@ -1,3 +1,18 @@
+var SearchResultsLayout = Mn.View.extend({
+    template: '#search-results-layout-tmpl',
+    regions: {
+        results: {
+            el: 'table tbody',
+            replaceElement: true
+        }
+    },
+    onRender: function(){
+        this.showChildView('results', new SearchResultsView({
+            collection: this.collection
+        }));
+    }
+});
+
 var SearchResultView = Mn.View.extend({
     template: '#search-result-tmpl',
     tagName: 'tr',
@@ -17,7 +32,7 @@ var MainView = Mn.View.extend({
         searchResults: '#search-results'
     },
     showSearchResults: function(results){
-        this.showChildView('searchResults', new SearchResultsView({
+        this.showChildView('searchResults', new SearchResultsLayout({
             collection: results
         }));
     }

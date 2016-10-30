@@ -9,7 +9,9 @@ html,
 body {
     height: 100%;
 }
-
+#main-content{
+    margin-top: 20px;
+}
 nav.navbar-static-top{
     margin-bottom: 0;
 }

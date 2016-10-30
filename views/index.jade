@@ -29,58 +29,12 @@ html(lang='en')
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.navbar-brand(href='index.html') #{title}
+          a.navbar-brand(href='/') #{title}
         // Collect the nav links, forms, and other content for toggling
-        //-
         #bs-example-navbar-collapse-1.collapse.navbar-collapse
-          ul.nav.navbar-nav.navbar-right
+          //-ul.nav.navbar-nav.navbar-right
             li
               a(href='about.html') About
-            li
-              a(href='services.html') Services
-            li
-              a(href='contact.html') Contact
-            li.dropdown
-              a.dropdown-toggle(href='#', data-toggle='dropdown')
-                | Portfolio
-                b.caret
-              ul.dropdown-menu
-                li
-                  a(href='portfolio-1-col.html') 1 Column Portfolio
-                li
-                  a(href='portfolio-2-col.html') 2 Column Portfolio
-                li
-                  a(href='portfolio-3-col.html') 3 Column Portfolio
-                li
-                  a(href='portfolio-4-col.html') 4 Column Portfolio
-                li
-                  a(href='portfolio-item.html') Single Portfolio Item
-            li.dropdown
-              a.dropdown-toggle(href='#', data-toggle='dropdown')
-                | Blog
-                b.caret
-              ul.dropdown-menu
-                li
-                  a(href='blog-home-1.html') Blog Home 1
-                li
-                  a(href='blog-home-2.html') Blog Home 2
-                li
-                  a(href='blog-post.html') Blog Post
-            li.dropdown
-              a.dropdown-toggle(href='#', data-toggle='dropdown')
-                | Other Pages
-                b.caret
-              ul.dropdown-menu
-                li
-                  a(href='full-width.html') Full Width Page
-                li
-                  a(href='sidebar.html') Sidebar Page
-                li
-                  a(href='faq.html') FAQ
-                li
-                  a(href='404.html') 404
-                li
-                  a(href='pricing.html') Pricing Table
         // /.navbar-collapse
       // /.container
     // Header Carousel
@@ -100,95 +54,8 @@ html(lang='en')
     // Page Content
     .container#main-content
       .row
-          .col-lg-12
-              table#search-results.table.table-striped
-      // Marketing Icons Section
-      .row
         .col-lg-12
-          h1.page-header
-            | #{title}
-        .col-md-4
-          .panel.panel-default
-            .panel-heading
-              h4
-                i.fa.fa-fw.fa-check
-                |  Bootstrap v3.3.7
-            .panel-body
-              p
-                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, optio corporis quae nulla aspernatur in alias at numquam rerum ea excepturi expedita tenetur assumenda voluptatibus eveniet incidunt dicta nostrum quod?
-              a.btn.btn-default(href='#') Learn More
-        .col-md-4
-          .panel.panel-default
-            .panel-heading
-              h4
-                i.fa.fa-fw.fa-gift
-                |  Free & Open Source
-            .panel-body
-              p
-                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, optio corporis quae nulla aspernatur in alias at numquam rerum ea excepturi expedita tenetur assumenda voluptatibus eveniet incidunt dicta nostrum quod?
-              a.btn.btn-default(href='#') Learn More
-        .col-md-4
-          .panel.panel-default
-            .panel-heading
-              h4
-                i.fa.fa-fw.fa-compass
-                |  Easy to Use
-            .panel-body
-              p
-                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, optio corporis quae nulla aspernatur in alias at numquam rerum ea excepturi expedita tenetur assumenda voluptatibus eveniet incidunt dicta nostrum quod?
-              a.btn.btn-default(href='#') Learn More
-      // /.row
-      // Portfolio Section
-      .row
-        .col-lg-12
-          h2.page-header Portfolio Heading
-        .col-md-4.col-sm-6
-          a(href='portfolio-item.html')
-            img.img-responsive.img-portfolio.img-hover(src='http://placehold.it/700x450', alt='')
-        .col-md-4.col-sm-6
-          a(href='portfolio-item.html')
-            img.img-responsive.img-portfolio.img-hover(src='http://placehold.it/700x450', alt='')
-        .col-md-4.col-sm-6
-          a(href='portfolio-item.html')
-            img.img-responsive.img-portfolio.img-hover(src='http://placehold.it/700x450', alt='')
-        .col-md-4.col-sm-6
-          a(href='portfolio-item.html')
-            img.img-responsive.img-portfolio.img-hover(src='http://placehold.it/700x450', alt='')
-        .col-md-4.col-sm-6
-          a(href='portfolio-item.html')
-            img.img-responsive.img-portfolio.img-hover(src='http://placehold.it/700x450', alt='')
-        .col-md-4.col-sm-6
-          a(href='portfolio-item.html')
-            img.img-responsive.img-portfolio.img-hover(src='http://placehold.it/700x450', alt='')
-      // /.row
-      // Features Section
-      .row
-        .col-lg-12
-          h2.page-header Modern Business Features
-        .col-md-6
-          p The Modern Business template by Start Bootstrap includes:
-          ul
-            li
-              strong Bootstrap v3.3.7
-            li jQuery v1.11.1
-            li Font Awesome v4.2.0
-            li Working PHP contact form with validation
-            li Unstyled page elements for easy customization
-            li 17 HTML pages
-          p
-            | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, omnis doloremque non cum id reprehenderit, quisquam totam aspernatur tempora minima unde aliquid ea culpa sunt. Reiciendis quia dolorum ducimus unde.
-        .col-md-6
-          img.img-responsive(src='http://placehold.it/700x450', alt='')
-      // /.row
-      hr
-      // Call to Action Section
-      .well
-        .row
-          .col-md-8
-            p
-              | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, expedita, saepe, vero rerum deleniti beatae veniam harum neque nemo praesentium cum alias asperiores commodi.
-          .col-md-4
-            a.btn.btn-lg.btn-default.btn-block(href='#') Call to Action
+          table#search-results.table.table-striped
       hr
       // Footer
       footer
@@ -198,6 +65,8 @@ html(lang='en')
     // /.container
     script#search-result-tmpl(type='text/template')
         include templates/search_result.jade
+    script#search-results-layout-tmpl(type='text/template')
+        include templates/search_results_layout.jade
     script(src='javascripts/ext/jquery.js')
     script(src='javascripts/ext/bootstrap.min.js')
     script(src='javascripts/ext/underscore.js')
