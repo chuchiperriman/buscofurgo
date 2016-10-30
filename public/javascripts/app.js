@@ -6,10 +6,22 @@ var SearchResultsLayout = Mn.View.extend({
             replaceElement: true
         }
     },
+    events: {
+        'click th': 'sortTable'
+    },
     onRender: function(){
         this.showChildView('results', new SearchResultsView({
             collection: this.collection
         }));
+    },
+    sortTable: function(e){
+        var $link = $(e.currentTarget);
+        var field = $link.data('sort');
+        if (field){
+            console.log($link.data('sort'));
+            this.collection.comparator = field;
+            this.collection.sort();
+        }
     }
 });
 
