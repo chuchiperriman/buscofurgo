@@ -5,4 +5,4 @@ td <%=year%>
 td <%=mileage%>
 td <%=cv%>
 td <%=province%>
-td <%=description%>
+td(title!='<%=description%>') <%=description.substring(0,20)%>...
