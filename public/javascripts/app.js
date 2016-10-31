@@ -52,6 +52,7 @@ var MainView = Mn.View.extend({
 
 var SearchResults = Backbone.Collection.extend({
     url: '/search',
+    comparator: 'price',
     parse: function(response, options){
         return response['results'];
     }

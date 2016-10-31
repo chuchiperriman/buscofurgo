@@ -5,8 +5,10 @@ var cheerio = require('cheerio');
 var S = require('string');
 
 var config = {
-    online: false,
-    data_path: '/home/perriman/temp'
+    online: true,
+    data_path: '/home/perriman/temp',
+    url: 'http://www.coches.net/vehiculos-industriales'
+    //Página 2: http://www.coches.net/vehiculos-industriales/multivan/?pg=2&version=Multivan&or=1&fi=Price
 };
 
 var getX11Prop = function($el, prop){
@@ -14,8 +16,11 @@ var getX11Prop = function($el, prop){
 };
 
 
-function getMaData(html){
+function getData(html){
+    //console.log(iconv.decode(html, 'iso-8859-15').toString('utf-8'));
     var $ = cheerio.load(iconv.decode(html, 'iso-8859-15').toString('utf-8'));
+
+    console.log("Parseando cnet");
 
     var json = {
         adds: [],
@@ -23,19 +28,35 @@ function getMaData(html){
     }
     var adds = [];
 
-    $("div.aditem").each(function(i, elem) {
-        var data = $(this);
-        var props = data.find(".x11 .inmo-attributes");
-        var header = data.find(".aditem-header").text();
-        var $body = data.find(".aditem-detail-image-container, .aditem-detail");
-        if (!$body.length){
-            $body = data.find(".x9");
-        }
-        var $title = $body.find("a.aditem-detail-title");
-        var text = $body.find(".tx").text();
+    $(".mt-Card .mt-Card-body").each(function(i, elem) {
+        var $body = $(this);
 
+        var veh = {
+            source: 'coches.net',
+            title: $body.find(".mt-CardAd-title").text(),
+            link: 'http://www.coches.net' + $body.find('.mt-CardAd-link').attr('href'),
+            price: $body.find('.mt-CardAd-price strong').text(),
+            cv: '',
+            description: ''
+        };
+
+        var $attrs = $body.find('.mt-CardAd-attributesList');
+        $attrs.find('.mt-CardAd-attribute').each(function(i, elem){
+            var self = $(this);
+            if (i==0){
+                veh.location = self.text();
+                veh.province = self.text();
+            }else if (i == 1){
+                //veh.location = self.text();
+            }else if (i == 2){
+                veh.year = self.text();
+            }else if (i == 3){
+                veh.mileage = self.text().replace('km', '');
+            }
+        });
+        json.adds.push(veh);
+        /*
         json.adds.push({
-            source: 'milanuncios',
             title: $title.text(),
             link: "http://www.milanuncios.com" + $title.attr('href'),
             description: text,
@@ -48,6 +69,7 @@ function getMaData(html){
             province: S(header).between('(', ')').s.trim() ,
             location: S(header).contains(' en ') ? S(header).between(' en ', '(').s : ''
         });
+        */
 
     });
 
@@ -62,43 +84,6 @@ function getMaData(html){
     });
     return json;
 }
-
-function startRequestMaData(url, queryString, json, rescallback){
-
-    console.log("Entramos 1");
-
-    request({
-        uri: url + queryString,
-        encoding: null
-    }, function(error, response, html) {
-        if (!error) {
-            var madata = getMaData(html);
-            if (madata.adds){
-                json.results = json.results.concat(madata.adds);
-                console.log("Concat");
-            }
-
-            var totalPages = madata.pages.length;
-            var currentPages = 0;
-            if (totalPages > 0){
-                console.log('Procesando ' + currentPages + 2);
-                var nextPageRequest = function(){
-                    console.log(currentPages + ' de ' + totalPages);
-                    if (++currentPages == totalPages){
-                        rescallback(json);
-                    }else{
-                        requestMaData(url, queryString + '&pagina=' + (currentPages + 2), json, nextPageRequest);
-                    }
-                };
-                requestMaData(url, queryString + '&pagina=2', json, nextPageRequest);
-            }else{
-                rescallback(json);
-            }
-        }
-        console.log("Terminamos1");
-    });
-    console.log("Salimos1");
-};
 
 function requestMaData(url, queryString, json, callback){
 
@@ -121,6 +106,46 @@ function requestMaData(url, queryString, json, callback){
     console.log("Salimos");
 };
 
+function startRequestMaData(url, queryString, json, rescallback){
+
+    console.log("Entramos 1");
+
+    request({
+        uri: config.url + queryString,
+        encoding: null
+    }, function(error, response, html) {
+        if (!error) {
+            var madata = getData(html);
+            if (madata.adds){
+                json.results = json.results.concat(madata.adds);
+                console.log("Concat");
+            }
+            //TODO Quitar esto cuando hagamos las páginas
+            rescallback(json);
+            /*
+            var totalPages = madata.pages.length;
+            var currentPages = 0;
+            if (totalPages > 0){
+                console.log('Procesando ' + currentPages + 2);
+                var nextPageRequest = function(){
+                    console.log(currentPages + ' de ' + totalPages);
+                    if (++currentPages == totalPages){
+                        rescallback(json);
+                    }else{
+                        requestMaData(url, queryString + '&pagina=' + (currentPages + 2), json, nextPageRequest);
+                    }
+                };
+                requestMaData(url, queryString + '&pagina=2', json, nextPageRequest);
+            }else{
+                rescallback(json);
+            }
+            */
+        }
+        console.log("Terminamos1");
+    });
+    console.log("Salimos1");
+};
+
 module.exports = {
     search: function(responseCallback){
         var json = {
@@ -128,7 +153,9 @@ module.exports = {
             //La Primera página la damos por procesada siempre
             pages: [1]
         };
-        startRequestMaData('http://www.milanuncios.com/anuncios-en-cantabria/t5-multivan.htm',
-            '?desde=3000&demanda=n&orden=baratos&cerca=s', json, responseCallback);
+        startRequestMaData(config.url,
+            '?or=1&fi=Price&Version=Multivan',
+            json,
+            responseCallback);
     }
 };
