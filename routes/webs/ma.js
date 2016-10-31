@@ -4,11 +4,6 @@ var request = require('request');
 var cheerio = require('cheerio');
 var S = require('string');
 
-var config = {
-    online: false,
-    data_path: '/home/perriman/temp'
-};
-
 var getX11Prop = function($el, prop){
     return $el.find("." + prop).contents().first().text();
 };

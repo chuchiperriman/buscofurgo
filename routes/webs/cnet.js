@@ -5,8 +5,6 @@ var cheerio = require('cheerio');
 var S = require('string');
 
 var config = {
-    online: true,
-    data_path: '/home/perriman/temp',
     url: 'http://www.coches.net/vehiculos-industriales'
     //Página 2: http://www.coches.net/vehiculos-industriales/multivan/?pg=2&version=Multivan&or=1&fi=Price
 };

@@ -6,7 +6,7 @@ var ma = require('./webs/ma');
 var cnet = require('./webs/cnet');
 
 var config = {
-    online: true,
+    online: false,
     data_path: '/home/perriman/temp'
 };
 
@@ -18,23 +18,18 @@ router.get('/', function(req, res) {
         pages: [1]
     };
 
-    var jsonFile = config.data_path + '/ma_data.json';
+    var jsonFile = config.data_path + '/total_data.json';
 
     if (config.online){
         var finalJson;
         ma.search(function(json){
-            console.log('Respondemos');
-            fs.writeFile(jsonFile, JSON.stringify(json), function (err) {
-                if (err) return console.log(err);
-                console.log('MA data stored');
-            });
             finalJson = json;
             cnet.search(function(json){
-                fs.writeFile(config.data_path + '/cnet_data.json', JSON.stringify(json), function (err) {
-                    if (err) return console.log(err);
-                    console.log('CNET data stored');
-                });
                 finalJson.results = finalJson.results.concat(json.results);
+                fs.writeFile(jsonFile, JSON.stringify(finalJson), function (err) {
+                    if (err) return console.log(err);
+                    console.log('Total data stored');
+                });
                 res.json(finalJson);
             });
         });
