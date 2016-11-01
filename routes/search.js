@@ -7,7 +7,11 @@ var cnet = require('./webs/cnet');
 
 var config = {
     online: false,
-    data_path: '/home/perriman/temp'
+    data_path: '/home/perriman/temp',
+    providers: [
+        ma,
+        cnet
+    ]
 };
 
 router.get('/', function(req, res) {
@@ -21,18 +25,24 @@ router.get('/', function(req, res) {
     var jsonFile = config.data_path + '/total_data.json';
 
     if (config.online){
-        var finalJson;
-        ma.search(function(json){
-            finalJson = json;
-            cnet.search(function(json){
-                finalJson.results = finalJson.results.concat(json.results);
+        var finalJson = {
+            results: []
+        };
+
+        var num = 0;
+        var resProvider = function(json){
+            finalJson.results = finalJson.results.concat(json.results);
+            if (++num < config.providers.length){
+                config.providers[num].search(resProvider);
+            }else{
                 fs.writeFile(jsonFile, JSON.stringify(finalJson), function (err) {
                     if (err) return console.log(err);
                     console.log('Total data stored');
                 });
                 res.json(finalJson);
-            });
-        });
+            }
+        };
+        config.providers[num].search(resProvider);
     }else{
         res.set('Content-Type', 'application/json');
         res.send(fs.readFileSync(jsonFile, 'UTF-8'));

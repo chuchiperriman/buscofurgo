@@ -5,14 +5,10 @@ var cheerio = require('cheerio');
 var S = require('string');
 
 var config = {
+    data_path: '/home/perriman/temp',
     url: 'http://www.coches.net/vehiculos-industriales'
     //Página 2: http://www.coches.net/vehiculos-industriales/multivan/?pg=2&version=Multivan&or=1&fi=Price
 };
-
-var getX11Prop = function($el, prop){
-    return $el.find("." + prop).contents().first().text();
-};
-
 
 function getData(html){
     //console.log(iconv.decode(html, 'iso-8859-15').toString('utf-8'));
