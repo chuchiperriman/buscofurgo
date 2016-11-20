@@ -3,6 +3,7 @@ var iconv = require('iconv-lite');
 var request = require('request');
 var cheerio = require('cheerio');
 var S = require('string');
+var utils = require('../utils');
 
 var config = {
     data_path: '/home/perriman/temp',
@@ -29,7 +30,7 @@ function getData(html){
             source: 'coches.net',
             title: $body.find(".mt-CardAd-title").text(),
             link: 'http://www.coches.net' + $body.find('.mt-CardAd-link').attr('href'),
-            price: $body.find('.mt-CardAd-price strong').text(),
+            price: utils.priceToNumber($body.find('.mt-CardAd-price strong').text()),
             cv: '',
             description: ''
         };
