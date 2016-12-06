@@ -55,6 +55,9 @@ html(lang='en')
     .container#main-content
       .row
         .col-lg-12
+          canvas#price-year-chart(width="400", height="100")
+      .row
+        .col-lg-12
           table#search-results.table.table-striped
       hr
       // Footer
@@ -73,4 +76,6 @@ html(lang='en')
     script(src='javascripts/ext/backbone.js')
     script(src='javascripts/ext/backbone.radio.js')
     script(src='javascripts/ext/backbone.marionette.min.js')
+    script(src='javascripts/ext/Chart.bundle.js')
+    script(src='javascripts/charts.js')
     script(src='javascripts/app.js')

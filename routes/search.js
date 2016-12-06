@@ -6,7 +6,7 @@ var ma = require('./webs/ma');
 var cnet = require('./webs/cnet');
 
 var config = {
-    online: true,
+    online: false,
     data_path: '/home/perriman/temp',
     providers: [
         ma,

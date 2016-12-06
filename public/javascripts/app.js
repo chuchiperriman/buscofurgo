@@ -41,12 +41,26 @@ var MainView = Mn.View.extend({
     template: false,
     regions:{
         mainContent: '#main-content',
-        searchResults: '#search-results'
+        searchResults: '#search-results',
+        priceMileageChart: '#price-mileage-chart'
     },
     showSearchResults: function(results){
         this.showChildView('searchResults', new SearchResultsLayout({
             collection: results
         }));
+    },
+    showPriceMileageChart: function(results){
+        var valid = results.filter(function(m){
+            return m.get('price') < 50000;
+        });
+        var data = valid.map(function(m){
+            return {
+                x: m.get('price'),
+                y: m.get('mileage')
+            }
+        });
+
+        loadChart(data);
     }
 });
 
@@ -93,6 +107,7 @@ app.on('start', function() {
 
     searchbox.on('search:done', function(collection){
         app.getRegion().showSearchResults(collection);
+        app.getRegion().showPriceMileageChart(collection);
     });
 
     searchbox.render();
