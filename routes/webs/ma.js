@@ -3,6 +3,7 @@
 
 var fs = require('fs');
 var iconv = require('iconv-lite');
+var async = require('async');
 var request = require('request');
 var cheerio = require('cheerio');
 var S = require('string');
@@ -107,7 +108,7 @@ function startRequestMaData(url, queryString, json, rescallback){
 
 function requestMaData(url, queryString, json, callback){
 
-    console.log("Entramos: " + queryString);
+    console.log("Entramos: " + url + queryString);
 
     request({
         uri: url + queryString,
@@ -128,45 +129,32 @@ function requestMaData(url, queryString, json, callback){
 
 module.exports = {
     search: function(responseCallback){
-        var json = {
-            results: [],
-            //La Primera página la damos por procesada siempre
-            pages: [1]
-        };
+
         var busquedas = [
             'http://www.milanuncios.com/anuncios-en-cantabria/t5-multivan.htm',
             'http://www.milanuncios.com/anuncios-en-cantabria/mercedes-viano.htm',
             'http://www.milanuncios.com/anuncios-en-cantabria/mercedes-vito.htm'
         ];
 
-        var i = 0;
-        var finalJson = {
-            results: []
-        };
-
-        var controlEnd = function(data){
-            finalJson.results = finalJson.results.concat(data.results);
-            if (++i == busquedas.length){
-                responseCallback(finalJson);
-            }
-        };
-
-        for (var b of busquedas){
-            startRequestMaData(b,
-                '?desde=3000&demanda=n&orden=baratos&cerca=s', json,
-                controlEnd);
-        }
-        /*
-        startRequestMaData(busquedas[0],
-            '?desde=3000&demanda=n&orden=baratos&cerca=s', json, function(data){
-
-                var finalJson = data;
-                startRequestMaData('http://www.milanuncios.com/anuncios-en-cantabria/mercedes-viano.htm',
-                '?desde=3000&demanda=n&orden=baratos&cerca=s', json, function(data){
-                    finalJson.results = finalJson.results.concat(data.results);
-                    responseCallback(finalJson);
+        var search = function(url, callback){
+            var json = {
+                results: [],
+                //La Primera página la damos por procesada siempre
+                pages: [1]
+            };
+            startRequestMaData(url,
+                '?desde=3000&demanda=n&orden=baratos&cerca=s',
+                json,
+                function(data){
+                    callback(null, data.results);
                 });
+        }
+
+        async.map(busquedas, search, function(err, resultArrays) {
+            responseCallback({
+                results: [].concat.apply([], resultArrays)
+            });
         });
-        */
+
     }
 };
