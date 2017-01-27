@@ -126,101 +126,6 @@ function requestMaData(url, queryString, json, callback){
     console.log("Salimos");
 };
 
-/*
-class Finder {
-    constructor(){
-        this.json = {
-            results: [],
-            //La Primera página la damos por procesada siempre
-            pages: [1]
-        };
-    }
-    _getX11Prop ($el, prop){
-        return $el.find("." + prop).contents().first().text();
-    };
-    parseHtml(html){
-        var $ = cheerio.load(iconv.decode(html, 'iso-8859-15').toString('utf-8'));
-
-        var json = {
-            adds: [],
-            pages: []
-        }
-        var adds = [];
-
-        $("div.aditem").each(function(i, elem) {
-            var data = $(this);
-            var props = data.find(".x11 .inmo-attributes");
-            var header = data.find(".aditem-header").text();
-            var $body = data.find(".aditem-detail-image-container, .aditem-detail");
-            if (!$body.length){
-                $body = data.find(".x9");
-            }
-            var $title = $body.find("a.aditem-detail-title");
-            var text = $body.find(".tx").text();
-
-            json.adds.push({
-                source: 'milanuncios',
-                title: $title.text(),
-                link: "http://www.milanuncios.com" + $title.attr('href'),
-                description: text,
-                price: $body.find('.aditem-price').text(),
-                year: this._getX11Prop(props, "ano").replace('año',''),
-                mileage: this._getX11Prop(props, "kms").replace('kms',''),
-                cv: this._getX11Prop(props, "cc").replace('cv',''),
-                professional: data.find(".vem.pro").length > 0,
-                automatic: data.find(".cauto").length > 0,
-                province: S(header).between('(', ')').s.trim() ,
-                location: S(header).contains(' en ') ? S(header).between(' en ', '(').s : ''
-            });
-
-        });
-
-        $('div.adlist-paginator-pages .adlist-paginator-pagelink').each(function(i, elem){
-            var data = $(this);
-            if (!data.hasClass('adlist-paginator-pageselected')){
-                json.pages.push({
-                    number: parseInt(data.find('a').text()),
-                    queryString: data.find('a').attr('href')
-                });
-            }
-        });
-        return json;
-    }
-    search(){
-        var self = this;
-        request({
-            uri: url + queryString,
-            encoding: null
-        }, function(error, response, html) {
-            if (!error) {
-                var data = self.parseHtml(html);
-                if (data.adds){
-                    json.results = json.results.concat(data.adds);
-                    console.log("Concat");
-                }
-                var totalPages = madata.pages.length;
-                var currentPages = 0;
-                if (totalPages > 0){
-                    console.log('Procesando ' + currentPages + 2);
-                    var nextPageRequest = function(){
-                        console.log(currentPages + ' de ' + totalPages);
-                        if (++currentPages == totalPages){
-                            rescallback(json);
-                        }else{
-                            requestMaData(url, queryString + '&pagina=' + (currentPages + 2), json, nextPageRequest);
-                        }
-                    };
-                    requestMaData(url, queryString + '&pagina=2', json, nextPageRequest);
-                }else{
-                    rescallback(json);
-                }
-            }
-            console.log("Terminamos1");
-        });
-    }
-}
-*/
-
 module.exports = {
     search: function(responseCallback){
         var json = {
@@ -238,6 +143,7 @@ module.exports = {
         var finalJson = {
             results: []
         };
+
         var controlEnd = function(data){
             finalJson.results = finalJson.results.concat(data.results);
             if (++i == busquedas.length){

@@ -6,7 +6,6 @@ var S = require('string');
 var utils = require('../utils');
 
 var config = {
-    data_path: '/home/perriman/temp',
     url: 'http://www.coches.net/vehiculos-industriales'
     //Página 2: http://www.coches.net/vehiculos-industriales/multivan/?pg=2&version=Multivan&or=1&fi=Price
 };
@@ -106,7 +105,7 @@ function startRequestMaData(url, queryString, json, rescallback){
     console.log("Entramos 1");
 
     request({
-        uri: config.url + queryString,
+        uri: url + queryString,
         encoding: null
     }, function(error, response, html) {
         if (!error) {
@@ -149,7 +148,8 @@ module.exports = {
             pages: [1]
         };
         startRequestMaData(config.url,
-            '?or=1&fi=Price&Version=Multivan',
+            //Multivan
+            'or=1&fi=Price&MakeId=47&ModelId=522',
             json,
             responseCallback);
     }

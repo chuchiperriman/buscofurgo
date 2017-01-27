@@ -4,10 +4,12 @@ var fs = require('fs');
 var app = express();
 var ma = require('./webs/ma');
 var cnet = require('./webs/cnet');
+var utils = require('./utils');
+var async = require('async');
 
 var config = {
-    online: false,
-    data_path: '/home/perriman/temp',
+    online: true,
+    data_path: utils.getUserHome(),
     providers: [
         ma,
         cnet
@@ -16,33 +18,31 @@ var config = {
 
 router.get('/', function(req, res) {
 
-    var json = {
-        results: [],
-        //La Primera página la damos por procesada siempre
-        pages: [1]
-    };
-
-    var jsonFile = config.data_path + '/total_data.json';
+    var jsonFile = config.data_path + '/.buscofurgo_data.json';
 
     if (config.online){
-        var finalJson = {
-            results: []
-        };
-
-        var num = 0;
-        var resProvider = function(json){
-            finalJson.results = finalJson.results.concat(json.results);
-            if (++num < config.providers.length){
-                config.providers[num].search(resProvider);
-            }else{
-                fs.writeFile(jsonFile, JSON.stringify(finalJson), function (err) {
+        var search = function(provider, callback){
+            provider.search(function(json){
+                callback(null, json.results);
+            });
+        }
+        async.map(config.providers, search, function(err, resultArrays) {
+            var json = {
+                results: [].concat.apply([], resultArrays)
+            };
+            // Cuando han terminado todos:
+            if (!err){
+                fs.writeFile(jsonFile, JSON.stringify(json), function (err) {
                     if (err) return console.log(err);
                     console.log('Total data stored');
                 });
-                res.json(finalJson);
+            }else{
+                console.error("Error en la llamada a los buscadores");
+                console.error(err);
             }
-        };
-        config.providers[num].search(resProvider);
+            console.log("Fin de todo, respondemos la web");
+            res.json(json);
+        });
     }else{
         res.set('Content-Type', 'application/json');
         res.send(fs.readFileSync(jsonFile, 'UTF-8'));

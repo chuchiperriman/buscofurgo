@@ -23,7 +23,7 @@ nav.navbar-static-top{
 }
 
 header.portada {
-    height: 35%;
+    height: 200px;
     background-image: url(/images/fondo-min.jpeg);
     background-size:cover;
     background-color: #AAA;

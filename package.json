@@ -6,6 +6,7 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "async": "^2.1.4",
     "body-parser": "~1.15.1",
     "chart.js": "^2.4.0",
     "cheerio": "latest",
