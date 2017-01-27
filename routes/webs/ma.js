@@ -133,7 +133,8 @@ module.exports = {
         var busquedas = [
             'http://www.milanuncios.com/anuncios-en-cantabria/multivan.htm',
             'http://www.milanuncios.com/anuncios-en-cantabria/mercedes-viano.htm',
-            'http://www.milanuncios.com/anuncios-en-cantabria/mercedes-vito.htm'
+            'http://www.milanuncios.com/anuncios-en-cantabria/mercedes-vito.htm',
+            'http://www.milanuncios.com/anuncios-en-cantabria/mercedes-clase-v.htm'
         ];
 
         var search = function(url, callback){

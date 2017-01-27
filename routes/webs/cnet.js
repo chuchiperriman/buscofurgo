@@ -146,6 +146,7 @@ module.exports = {
             'http://www.coches.net/volkswagen/multivan/segunda-mano/',
             'http://www.coches.net/mercedes-benz/vito/segunda-mano/',
             'http://www.coches.net/mercedes-benz/viano/segunda-mano/',
+            'http://www.coches.net/mercedes-benz/clase_v/segunda-mano/'
         ];
 
         var search = function(url, callback){
