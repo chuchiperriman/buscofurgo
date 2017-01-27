@@ -1,14 +1,10 @@
 var fs = require('fs');
 var iconv = require('iconv-lite');
+var async = require('async');
 var request = require('request');
 var cheerio = require('cheerio');
 var S = require('string');
 var utils = require('../utils');
-
-var config = {
-    url: 'http://www.coches.net/vehiculos-industriales'
-    //Página 2: http://www.coches.net/vehiculos-industriales/multivan/?pg=2&version=Multivan&or=1&fi=Price
-};
 
 function getData(html){
     //console.log(iconv.decode(html, 'iso-8859-15').toString('utf-8'));
@@ -142,15 +138,35 @@ function startRequestMaData(url, queryString, json, rescallback){
 
 module.exports = {
     search: function(responseCallback){
-        var json = {
-            results: [],
-            //La Primera página la damos por procesada siempre
-            pages: [1]
-        };
-        startRequestMaData(config.url,
-            //Multivan
-            'or=1&fi=Price&MakeId=47&ModelId=522',
-            json,
-            responseCallback);
+
+        //Página 3 http://www.coches.net/mercedes-benz/viano/segunda-mano/?pg=3&or=1&fi=Price
+
+
+        var busquedas = [
+            'http://www.coches.net/volkswagen/multivan/segunda-mano/',
+            'http://www.coches.net/mercedes-benz/vito/segunda-mano/',
+            'http://www.coches.net/mercedes-benz/viano/segunda-mano/',
+        ];
+
+        var search = function(url, callback){
+            var json = {
+                results: [],
+                //La Primera página la damos por procesada siempre
+                pages: [1]
+            };
+            startRequestMaData(url,
+                'or=1&fi=Price',
+                json,
+                function(data){
+                    callback(null, data.results);
+                });
+        }
+
+        async.map(busquedas, search, function(err, resultArrays) {
+            responseCallback({
+                results: [].concat.apply([], resultArrays)
+            });
+        });
+
     }
 };
